@@ -300,6 +300,7 @@ export default class SheepPay {
 }
 
 export function getPayMethods(channels) {
+  // 只保留微信支付选项
   const payMethods = [
     {
       icon: '/static/img/shop/pay/wechat.png',
@@ -307,34 +308,10 @@ export function getPayMethods(channels) {
       value: 'wechat',
       disabled: true,
     },
-    {
-      icon: '/static/img/shop/pay/alipay.png',
-      title: '支付宝支付',
-      value: 'alipay',
-      disabled: true,
-    },
-    {
-      icon: '/static/img/shop/pay/wallet.png',
-      title: '余额支付',
-      value: 'wallet',
-      disabled: true,
-    },
-    {
-      icon: '/static/img/shop/pay/apple.png',
-      title: 'Apple Pay',
-      value: 'apple',
-      disabled: true,
-    },
-    {
-      icon: '/static/img/shop/pay/wallet.png',
-      title: '模拟支付',
-      value: 'mock',
-      disabled: true,
-    },
   ];
   const platform = sheep.$platform.name;
 
-  // 1. 处理【微信支付】
+  // 处理【微信支付】
   const wechatMethod = payMethods[0];
   if (
     (platform === 'WechatOfficialAccount' && channels.includes('wx_pub')) ||
@@ -344,27 +321,6 @@ export function getPayMethods(channels) {
     wechatMethod.disabled = false;
   }
 
-  // 2. 处理【支付宝支付】
-  const alipayMethod = payMethods[1];
-  if (
-    (platform === 'H5' && channels.includes('alipay_wap')) ||
-    (platform === 'WechatOfficialAccount' && channels.includes('alipay_wap')) ||
-    (platform === 'WechatMiniProgram' && channels.includes('alipay_wap')) ||
-    (platform === 'App' && channels.includes('alipay_app'))
-  ) {
-    alipayMethod.disabled = false;
-  }
-  // 3. 处理【余额支付】
-  const walletMethod = payMethods[2];
-  if (channels.includes('wallet')) {
-    walletMethod.disabled = false;
-  }
-  // 4. 处理【苹果支付】TODO 芋艿：未来接入
-  // 5. 处理【模拟支付】
-  const mockMethod = payMethods[4];
-  if (channels.includes('mock')) {
-    mockMethod.disabled = false;
-  }
   return payMethods;
 }
 
