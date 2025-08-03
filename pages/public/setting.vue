@@ -52,7 +52,7 @@
         />
       </uni-list>
     </view>
-    <view class="set-footer ss-flex-col ss-row-center ss-col-center">
+<!--    <view class="set-footer ss-flex-col ss-row-center ss-col-center">
       <view class="agreement-box ss-flex ss-col-center ss-m-b-40">
         <view class="ss-flex ss-col-center ss-m-b-10">
           <view
@@ -80,7 +80,7 @@
       </view>
       <view class="copyright-text ss-m-b-10">{{ appInfo.copyright }}</view>
       <view class="copyright-text">{{ appInfo.copytime }}</view>
-    </view>
+    </view> -->
     <su-fixed bottom placeholder>
       <view class="ss-p-x-20 ss-p-b-40">
         <button

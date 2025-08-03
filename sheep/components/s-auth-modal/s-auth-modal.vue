@@ -80,16 +80,16 @@
       </view>
 
       <!-- 用户协议的勾选 -->
-      <view
+   <!--   <view
         v-if="['accountLogin', 'smsLogin'].includes(authType)"
         class="agreement-box ss-flex ss-flex-col ss-col-center"
         :class="{ shake: currentProtocol }"
       >
         <view class="agreement-title ss-m-b-20">请选择是否同意以下协议(请联网查看)：</view>
-        
-        <view class="agreement-options-container">
+        -->
+     <!--  <view class="agreement-options-container"> -->
           <!-- 同意选项 -->
-          <view class="agreement-option ss-m-b-20">
+<!--          <view class="agreement-option ss-m-b-20">
             <label class="radio ss-flex ss-col-center" @tap="onAgree">
               <radio
                 :checked="state.protocol === true"
@@ -104,10 +104,10 @@
                 <view class="tcp-text" @tap.stop="onProtocol('隐私协议')"> 《隐私协议》 </view>
               </view>
             </label>
-          </view>
+          </view> -->
           
           <!-- 拒绝选项 -->
-          <view class="agreement-option">
+<!--          <view class="agreement-option">
             <label class="radio ss-flex ss-col-center" @tap="onRefuse">
               <radio
                 :checked="state.protocol === false"
@@ -122,10 +122,10 @@
                 <view class="tcp-text" @tap.stop="onProtocol('隐私协议')"> 《隐私协议》 </view>
               </view>
             </label>
-          </view>
-        </view>
-      </view>
-      <view class="safe-box" />
+          </view> -->
+<!--        </view> -->
+    <!--  </view> -->
+     <!-- <view class="safe-box" /> -->
     </view>
   </su-popup>
 </template>
@@ -146,7 +146,7 @@
   const authType = computed(() => modalStore.auth);
 
   const state = reactive({
-    protocol: null, // null表示未选择，true表示同意，false表示拒绝
+    protocol: true, // null表示未选择，true表示同意，false表示拒绝
   });
 
   const currentProtocol = ref(false);
