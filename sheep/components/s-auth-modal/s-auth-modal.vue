@@ -2,28 +2,33 @@
   <!-- 规格弹窗 -->
   <su-popup :show="authType !== ''" round="10" :showClose="true" @close="closeAuthModal">
     <view class="login-wrap">
+		<view class="head-box ss-m-b-60 ss-flex-col">
+		  <view class="ss-flex ss-m-b-20">
+		    <view class="head-title ss-m-r-40 head-title-animation">微信登录</view>
+		  </view>
+		</view>
       <!-- 1. 账号密码登录 accountLogin -->
-      <account-login
+<!--      <account-login
         v-if="authType === 'accountLogin'"
         :agreeStatus="state.protocol"
         @onConfirm="onConfirm"
-      />
+      /> -->
 
       <!-- 2. 短信登录  smsLogin -->
-      <sms-login
+<!--     <sms-login
         v-if="authType === 'smsLogin'"
         :agreeStatus="state.protocol"
         @onConfirm="onConfirm"
-      />
+      /> -->
 
       <!-- 3. 忘记密码 resetPassword-->
-      <reset-password v-if="authType === 'resetPassword'" />
+<!--      <reset-password v-if="authType === 'resetPassword'" /> -->
 
       <!-- 4. 绑定手机号 changeMobile -->
-      <change-mobile v-if="authType === 'changeMobile'" />
+<!--      <change-mobile v-if="authType === 'changeMobile'" /> -->
 
       <!-- 5. 修改密码 changePassword-->
-      <changePassword v-if="authType === 'changePassword'" />
+<!--      <changePassword v-if="authType === 'changePassword'" /> -->
 
       <!-- 6. 微信小程序授权 -->
       <mp-authorization v-if="authType === 'mpAuthorization'" />
@@ -34,7 +39,7 @@
         class="auto-login-box ss-flex ss-flex-col ss-row-center ss-col-center"
       >
         <!-- 7.1 微信小程序的快捷登录 -->
-        <view v-if="sheep.$platform.name === 'WechatMiniProgram'" class="ss-flex register-box">
+<!--       <view v-if="sheep.$platform.name === 'WechatMiniProgram'" class="ss-flex register-box">
           <view class="register-title">还没有账号?</view>
           <button
             class="ss-reset-button login-btn"
@@ -44,7 +49,7 @@
             快捷登录
           </button>
           <view class="circle" />
-        </view>
+        </view> -->
 
         <!-- 7.2 微信的公众号、App、小程序的登录，基于 openid + code -->
         <button
