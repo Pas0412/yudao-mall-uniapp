@@ -45,9 +45,9 @@
                 }}
               </text>
             </view>
-            <view class="sales-text">
+     <!--       <view class="sales-text">
               {{ formatExchange(state.goodsInfo.sales_show_type, state.goodsInfo.sales) }}
-            </view>
+            </view> -->
           </view>
           <view class="origin-price-text ss-m-b-60" v-if="state.goodsInfo.marketPrice">
             原价：￥{{ fen2yuan(state.selectedSku.marketPrice || state.goodsInfo.marketPrice) }}

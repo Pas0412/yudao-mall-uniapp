@@ -92,9 +92,9 @@
                   {{ fen2yuan(state.selectedSku.marketPrice || state.goodsInfo.marketPrice) }}
                 </view>
               </view>
-              <view class="sales-text">
+             <!-- <view class="sales-text">
                 {{ formatSales('exact', state.goodsInfo.salesCount) }}
-              </view>
+              </view> -->
             </view>
             <view class="discounts-box ss-flex ss-row-between ss-m-b-28">
               <!-- 查看优惠劵的描述 -->
