@@ -54,7 +54,17 @@
 
     // 只对id为22的页面进行会员等级检查
     if (id == 22) {
-      await checkUserLevel();
+		// 获取用户信息
+		const userInfo = sheep.$store('user').userInfo;
+		if (!userInfo || !userInfo.id) {
+		   showAuthModal("smsLogin",()=>{
+			   state.loading = false;
+			   state.showContent = true;
+			   sheep.$router.go('/pages/goods/index', { id: 643 });
+		   });  
+		}else{
+          await checkUserLevel(userInfo.id);
+	    }
       if (state.showContent) {
         await getData(id);
       }
@@ -65,40 +75,33 @@
     }
   });
 
-  const checkUserLevel = async () => {
-    try {
-      // 获取用户信息
-      const userInfo = sheep.$store('user').userInfo;
-      if (!userInfo || !userInfo.id) {
-        showAuthModal();
-      }
-
+  const checkUserLevel = async (id) => {
+      try{
       // 调用会员等级接口
-      const { code, data } = await LevelApi.getUserLevelId(userInfo.id);
-      console.log(0)
-      if (code === 0) {
-        console.log("enter")
-        if (data === 1) {
-          // 等级为1，显示页面内容
-          console.log("correct")
-          state.showContent = true;
-          sheep.$router.go('/pages/index/page', { id: 23 });
-        } else {
-          // 等级为0或其他，跳转到指定页面
-          state.loading = false
-          state.showContent = true;
-          sheep.$router.go('/pages/goods/index', { id: 643 });
-        }
-      } else {
-        state.loading = false
-        sheep.$helper.toast('获取会员等级失败');
-        sheep.$router.go('/pages/goods/index', { id: 643 });
-      }
-    } catch (error) {
-      console.error('检查用户等级失败:', error);
-      sheep.$helper.toast('检查会员等级失败');
-      sheep.$router.go('/pages/goods/index', { id: 643 });
-    }
+		  const { code, data } = await LevelApi.getUserLevelId(id);
+		  console.log(0)
+		  if (code === 0) {
+			console.log("enter")
+			if (data === 1) {
+			  // 等级为1，显示页面内容
+			  console.log("correct")
+			  state.showContent = true;
+			  sheep.$router.go('/pages/index/page', { id: 23 });
+			} else {
+			  // 等级为0或其他，跳转到指定页面
+			  state.loading = false
+			  state.showContent = true;
+			  sheep.$router.go('/pages/goods/index', { id: 643 });
+			}
+		  } else {
+			state.loading = false
+			sheep.$helper.toast('获取会员等级失败');
+			sheep.$router.go('/pages/goods/index', { id: 643 });
+		  }
+	  }catch(error){
+		  sheep.$router.go('/pages/goods/index', { id: 643 });
+	  }
+   
   };
 
   const getData = async (id) => {

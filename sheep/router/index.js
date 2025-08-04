@@ -91,9 +91,9 @@ const _go = (
 
 // 限流 防止重复点击跳转
 function go(...args) {
-  throttle(() => {
+ // throttle(() => {
     _go(...args);
-  });
+ // });
 }
 
 function paramsToQuery(params) {
