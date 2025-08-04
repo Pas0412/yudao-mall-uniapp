@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-  import { reactive } from 'vue';
+  import { reactive, watch } from 'vue';
   import { onLoad, onPageScroll } from '@dcloudio/uni-app';
   import sheep from '@/sheep';
   import DiyApi from '@/sheep/api/promotion/diy';
@@ -35,6 +35,19 @@
     loading: true,
     showContent: false,
   });
+
+  const userStore = sheep.$store('user');
+
+  watch(
+    () => userStore.userInfo,
+    async (newUserInfo, oldUserInfo) => {
+      // 监听用户信息变化，当用户ID出现，且之前没有用户ID时，视为登录成功
+      if (newUserInfo?.id && !oldUserInfo?.id) {
+        await checkUserLevel(newUserInfo.id);
+      }
+    },
+    { deep: true },
+  );
 
   onLoad(async (options) => {
     let id = options.id;
@@ -54,17 +67,19 @@
 
     // 只对id为22的页面进行会员等级检查
     if (id == 22) {
-		// 获取用户信息
-		const userInfo = sheep.$store('user').userInfo;
-		if (!userInfo || !userInfo.id) {
-		   showAuthModal("smsLogin",()=>{
-			   state.loading = false;
-			   state.showContent = true;
-			   sheep.$router.go('/pages/goods/index', { id: 643 });
-		   });  
-		}else{
-          await checkUserLevel(userInfo.id);
-	    }
+      const userInfo = userStore.userInfo;
+      if (!userInfo?.id) {
+        showAuthModal('smsLogin', () => {
+          // 如果用户取消登录，也需要显示页面，避免一直 loading
+          if (!userStore.isLogin) {
+            state.loading = false;
+            state.showContent = true;
+          }
+        });
+      } else {
+        await checkUserLevel(userInfo.id);
+      }
+      // 只有在 showContent 为 true 时才加载页面数据
       if (state.showContent) {
         await getData(id);
       }
