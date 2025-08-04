@@ -87,6 +87,7 @@
         } else {
           // 等级为0或其他，跳转到指定页面
           state.loading = false
+          state.showContent = true;
           sheep.$router.go('/pages/goods/index', { id: 643 });
         }
       } else {
