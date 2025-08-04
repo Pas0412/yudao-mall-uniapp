@@ -6,7 +6,7 @@ import test from '@/sheep/helper/test.js';
 import AuthUtil from '@/sheep/api/member/auth';
 
 // 打开授权弹框
-export function showAuthModal(type = 'smsLogin',callback='') {
+export function showAuthModal(type = 'smsLogin') {
   const modal = $store('modal');
   // #ifdef H5
   closeAuthModal();
@@ -14,9 +14,6 @@ export function showAuthModal(type = 'smsLogin',callback='') {
     modal.$patch((state) => {
       state.auth = type;
     });
-   if (callback!=""&&typeof callback === 'function') {
-	      callback();
-  }
   }, 200);
   // #endif
 
@@ -24,9 +21,6 @@ export function showAuthModal(type = 'smsLogin',callback='') {
   modal.$patch((state) => {
     state.auth = type;
   });
-  if (callback!=""&&typeof callback === 'function') {
-    callback();
-  }
   // #endif
 }
 

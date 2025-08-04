@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-  import { reactive } from 'vue';
+  import { reactive,watch } from 'vue';
   import { onLoad, onPageScroll } from '@dcloudio/uni-app';
   import sheep from '@/sheep';
   import DiyApi from '@/sheep/api/promotion/diy';
@@ -35,6 +35,21 @@
     loading: true,
     showContent: false,
   });
+  
+  // 获取用户信息存储
+    const userStore = sheep.$store('user');
+    
+    // 监听userInfo变化
+    watch(
+      () => userStore.userInfo,  // 监听的目标数据
+      (newUserInfo, oldUserInfo) => {  // 变化时的回调
+        // 当用户信息从无到有，且包含id时执行等级检查
+        if (newUserInfo?.id && (!oldUserInfo?.id || newUserInfo.id !== oldUserInfo.id)) {
+          checkUserLevel(newUserInfo.id);
+        }
+      },
+      { immediate: false }  // 不立即执行，只在变化时执行
+    );
 
   onLoad(async (options) => {
     let id = options.id;
@@ -55,13 +70,9 @@
     // 只对id为22的页面进行会员等级检查
     if (id == 22) {
 		// 获取用户信息
-		const userInfo = sheep.$store('user').userInfo;
+		var userInfo = sheep.$store('user').userInfo;
 		if (!userInfo || !userInfo.id) {
-		   showAuthModal("smsLogin",()=>{
-			   state.loading = false;
-			   state.showContent = true;
-			   sheep.$router.go('/pages/goods/index', { id: 643 });
-		   });  
+		   showAuthModal();  
 		}else{
           await checkUserLevel(userInfo.id);
 	    }
