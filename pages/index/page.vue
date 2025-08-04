@@ -25,6 +25,7 @@
   import sheep from '@/sheep';
   import DiyApi from '@/sheep/api/promotion/diy';
   import LevelApi from '@/sheep/api/member/level';
+  import { showAuthModal } from '@/sheep/hooks/useModal';
 
   const state = reactive({
     name: '',
@@ -69,8 +70,7 @@
       // 获取用户信息
       const userInfo = sheep.$store('user').userInfo;
       if (!userInfo || !userInfo.id) {
-        sheep.$helper.toast('请先登录');
-        sheep.$router.go('/pages/index/login');
+        showAuthModal();
         return;
       }
 
@@ -86,9 +86,11 @@
           sheep.$router.go('/pages/index/page', { id: 23 });
         } else {
           // 等级为0或其他，跳转到指定页面
+          state.loading = false
           sheep.$router.go('/pages/goods/index', { id: 643 });
         }
       } else {
+        state.loading = false
         sheep.$helper.toast('获取会员等级失败');
         sheep.$router.go('/pages/goods/index', { id: 643 });
       }
