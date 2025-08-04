@@ -39,17 +39,16 @@
   // 获取用户信息存储
     const userStore = sheep.$store('user');
     
-    // 监听userInfo变化
-    watch(
-      () => userStore.userInfo,  // 监听的目标数据
-      (newUserInfo, oldUserInfo) => {  // 变化时的回调
-        // 当用户信息从无到有，且包含id时执行等级检查
-        if (newUserInfo?.id && (!oldUserInfo?.id || newUserInfo.id !== oldUserInfo.id)) {
-          checkUserLevel(newUserInfo.id);
-        }
-      },
-      { immediate: false }  // 不立即执行，只在变化时执行
-    );
+  watch(
+    () => userStore.userInfo,
+    async (newUserInfo, oldUserInfo) => {
+      // 监听用户信息变化，当用户ID出现，且之前没有用户ID时，视为登录成功
+      if (newUserInfo?.id && !oldUserInfo?.id) {
+        await checkUserLevel(newUserInfo.id);
+      }
+    },
+    { deep: true },
+  );
 
   onLoad(async (options) => {
     let id = options.id;
@@ -69,13 +68,19 @@
 
     // 只对id为22的页面进行会员等级检查
     if (id == 22) {
-		// 获取用户信息
-		var userInfo = sheep.$store('user').userInfo;
-		if (!userInfo || !userInfo.id) {
-		   showAuthModal();  
-		}else{
-          await checkUserLevel(userInfo.id);
-	    }
+      const userInfo = userStore.userInfo;
+      if (!userInfo?.id) {
+        showAuthModal('smsLogin', () => {
+          // 如果用户取消登录，也需要显示页面，避免一直 loading
+          if (!userStore.isLogin) {
+            state.loading = false;
+            state.showContent = true;
+          }
+        });
+      } else {
+        await checkUserLevel(userInfo.id);
+      }
+      // 只有在 showContent 为 true 时才加载页面数据
       if (state.showContent) {
         await getData(id);
       }
