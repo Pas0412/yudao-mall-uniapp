@@ -71,7 +71,6 @@
       const userInfo = sheep.$store('user').userInfo;
       if (!userInfo || !userInfo.id) {
         showAuthModal();
-        return;
       }
 
       // 调用会员等级接口
