@@ -2,6 +2,8 @@ import $store from '@/sheep/store';
 import { showAuthModal, showShareModal } from '@/sheep/hooks/useModal';
 import { isNumber, isString, isEmpty, startsWith, isObject, isNil, clone } from 'lodash-es';
 import throttle from '@/sheep/helper/throttle';
+import LevelApi from '@/sheep/api/member/level';
+import sheep from '@/sheep';
 
 const _go = (
   path,
@@ -158,11 +160,49 @@ function getCurrentPage() {
   return pages[pages.length - 1];
 }
 
+// 检查会员等级并决定是否显示分享弹窗
+const checkMemberAndShare = async () => {
+  const userStore = sheep.$store('user');
+  const userInfo = userStore.userInfo;
+  
+  if (!userInfo?.id) {
+    showAuthModal('smsLogin', async () => {
+      // 登录后再次检查
+      if (userStore.isLogin) {
+        await checkMemberAndShare();
+      }
+    });
+    return;
+  }
+  
+  try {
+    // 调用会员等级接口
+    const { code, data } = await LevelApi.getUserLevelId(userInfo.id);
+    if (code === 0) {
+      if (data === 1) {
+        // 等级为1，显示分享弹窗
+        showShareModal();
+      } else {
+        // 等级为0或其他，跳转到指定商品页
+        sheep.$router.go('/pages/goods/index', { id: 643 });
+      }
+    } else {
+      sheep.$helper.toast('获取会员等级失败');
+      sheep.$router.go('/pages/goods/index', { id: 643 });
+    }
+  } catch (error) {
+    sheep.$router.go('/pages/goods/index', { id: 643 });
+  }
+};
+
 function handleAction(path) {
   const action = path.split(':');
   switch (action[1]) {
     case 'showShareModal':
       showShareModal();
+      break;
+    case 'checkMemberAndShare':
+      checkMemberAndShare();
       break;
   }
 }

@@ -61,7 +61,7 @@
       {
         img: '/static/img/shop/commission/commission_icon7.png',
         title: '邀请海报',
-        path: 'action:showShareModal',
+        path: 'action:checkMemberAndShare',
       },
       {
         img: '/static/img/shop/commission/commission_icon8.png',

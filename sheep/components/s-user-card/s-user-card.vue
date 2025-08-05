@@ -18,7 +18,7 @@
         </view>
       </view>
       <view class="right-box ss-m-r-52">
-        <button class="ss-reset-button" @tap="showShareModal">
+        <button class="ss-reset-button" @tap="handleQrcodeClick">
           <text class="sicon-qrcode"></text>
         </button>
       </view>
@@ -59,6 +59,7 @@
     showShareModal,
     showAuthModal,
   } from '@/sheep/hooks/useModal';
+  import LevelApi from '@/sheep/api/member/level';
 
   // 用户信息
   const userInfo = computed(() => sheep.$store('user').userInfo);
@@ -116,6 +117,30 @@
   // 绑定手机号
   function onBind() {
     showAuthModal('changeMobile');
+  }
+
+  // 处理二维码按钮点击
+  async function handleQrcodeClick() {
+    // 判断是否登录
+    if (!isLogin.value) {
+      showAuthModal();
+      return;
+    }
+
+    // 已登录，判断会员等级
+    try {
+      const { code, data: levelId } = await LevelApi.getUserLevelId(userInfo.value.id);
+      if (code === 0 && levelId === 1) {
+        // 是会员，显示分享弹窗
+        showShareModal();
+      } else {
+        // 不是会员，跳转到商品详情页
+        sheep.$router.go('/pages/goods/index', { id: 643 });
+      }
+    } catch (error) {
+      // API调用失败，默认跳转到商品详情页
+      sheep.$router.go('/pages/goods/index', { id: 643 });
+    }
   }
 </script>
 
