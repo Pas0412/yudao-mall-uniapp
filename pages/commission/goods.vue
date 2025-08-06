@@ -58,12 +58,13 @@
   import sheep from '@/sheep';
   import $share from '@/sheep/platform/share';
   import { onLoad, onReachBottom } from '@dcloudio/uni-app';
-  import { reactive } from 'vue';
+  import { reactive, computed } from 'vue';
   import _ from 'lodash-es';
-  import { showShareModal } from '@/sheep/hooks/useModal';
+  import { showShareModal, showAuthModal } from '@/sheep/hooks/useModal';
   import SpuApi from '@/sheep/api/product/spu';
   import BrokerageApi from '@/sheep/api/trade/brokerage';
   import { fen2yuan } from '@/sheep/hooks/useGoods';
+  import LevelApi from '@/sheep/api/member/level';
 
   const state = reactive({
     pagination: {
@@ -76,26 +77,50 @@
     shareInfo: {},
   });
 
-  function onShareGoods(goodsInfo) {
-    state.shareInfo = $share.getShareInfo(
-      {
-        title: goodsInfo.name,
-        image: sheep.$url.cdn(goodsInfo.picUrl),
-        desc: goodsInfo.introduction,
-        params: {
-          page: '2',
-          query: goodsInfo.id,
-        },
-      },
-      {
-        type: 'goods', // 商品海报
-        title: goodsInfo.name, // 商品名称
-        image: sheep.$url.cdn(goodsInfo.picUrl), // 商品主图
-        price: fen2yuan(goodsInfo.price), // 商品价格
-        original_price: fen2yuan(goodsInfo.marketPrice), // 商品原价
-      },
-    );
-    showShareModal();
+  // 获取用户信息和登录状态
+  const userStore = sheep.$store('user');
+  const isLogin = computed(() => userStore.isLogin);
+  const userInfo = computed(() => userStore.userInfo);
+
+  async function onShareGoods(goodsInfo) {
+    // 判断是否登录
+    if (!isLogin.value) {
+      showAuthModal();
+      return;
+    }
+
+    // 已登录，判断会员等级
+    try {
+      const { code, data: levelId } = await LevelApi.getUserLevelId(userInfo.value.id);
+      if (code === 0 && levelId === 1) {
+        // 是会员，显示分享弹窗
+        state.shareInfo = $share.getShareInfo(
+          {
+            title: goodsInfo.name,
+            image: sheep.$url.cdn(goodsInfo.picUrl),
+            desc: goodsInfo.introduction,
+            params: {
+              page: '2',
+              query: goodsInfo.id,
+            },
+          },
+          {
+            type: 'goods', // 商品海报
+            title: goodsInfo.name, // 商品名称
+            image: sheep.$url.cdn(goodsInfo.picUrl), // 商品主图
+            price: fen2yuan(goodsInfo.price), // 商品价格
+            original_price: fen2yuan(goodsInfo.marketPrice), // 商品原价
+          },
+        );
+        showShareModal();
+      } else {
+        // 不是会员，跳转到商品详情页
+        sheep.$router.go('/pages/goods/index', { id: 643 });
+      }
+    } catch (error) {
+      // API调用失败，默认跳转到商品详情页
+      sheep.$router.go('/pages/goods/index', { id: 643 });
+    }
   }
 
   async function getGoodsList() {
