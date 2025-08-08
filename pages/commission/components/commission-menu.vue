@@ -63,16 +63,16 @@
         title: '邀请海报',
         path: 'action:checkMemberAndShare',
       },
-      {
-        img: '/static/img/shop/commission/commission_icon8.png',
-        title: '推广排行',
-        path: '/pages/commission/promoter',
-      },
-      {
-        img: '/static/img/shop/commission/commission_icon9.png',
-        title: '佣金排行',
-        path: '/pages/commission/commission-ranking',
-      },
+      // {
+      //   img: '/static/img/shop/commission/commission_icon8.png',
+      //   title: '推广排行',
+      //   path: '/pages/commission/promoter',
+      // },
+      // {
+      //   img: '/static/img/shop/commission/commission_icon9.png',
+      //   title: '佣金排行',
+      //   path: '/pages/commission/commission-ranking',
+      // },
     ],
   });
 </script>
