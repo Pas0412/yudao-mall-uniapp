@@ -454,6 +454,94 @@
 			]
 		},
 		{
+			"root": "pages/agent",
+			"pages": [{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "代理中心"
+					},
+					"meta": {
+						"auth": true,
+						"sync": true,
+						"title": "代理中心",
+						"group": "代理中心"
+					}
+				},
+				{
+					"path": "apply",
+					"style": {
+						"navigationBarTitleText": "申请代理"
+					},
+					"meta": {
+						"auth": true,
+						"sync": true,
+						"title": "申请代理",
+						"group": "代理中心"
+					}
+				},
+				{
+					"path": "commission",
+					"style": {
+						"navigationBarTitleText": "佣金记录"
+					},
+					"meta": {
+						"auth": true,
+						"sync": true,
+						"title": "佣金记录",
+						"group": "代理中心"
+					}
+				},
+				{
+					"path": "commission-detail",
+					"style": {
+						"navigationBarTitleText": "佣金详情"
+					},
+					"meta": {
+						"auth": true,
+						"sync": true,
+						"title": "佣金详情",
+						"group": "代理中心"
+					}
+				},
+				{
+					"path": "withdraw",
+					"style": {
+						"navigationBarTitleText": "申请提现"
+					},
+					"meta": {
+						"auth": true,
+						"sync": true,
+						"title": "申请提现",
+						"group": "代理中心"
+					}
+				},
+				{
+					"path": "withdraw-records",
+					"style": {
+						"navigationBarTitleText": "提现记录"
+					},
+					"meta": {
+						"auth": true,
+						"sync": true,
+						"title": "提现记录",
+						"group": "代理中心"
+					}
+				},
+				{
+					"path": "withdraw-detail",
+					"style": {
+						"navigationBarTitleText": "提现详情"
+					},
+					"meta": {
+						"auth": true,
+						"sync": true,
+						"title": "提现详情",
+						"group": "代理中心"
+					}
+				}
+			]
+		},
+		{
 			"root": "pages/app",
 			"pages": [{
 				"path": "sign",

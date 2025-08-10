@@ -334,3 +334,19 @@ export function getMonthTimes() {
   const endDate = new Date(nextMonth.getTime() - 1);
   return [startDate, endDate];
 }
+
+// 分转元
+export function fen2yuan(fen) {
+  if (fen === null || fen === undefined || fen === '') {
+    return '0.00';
+  }
+  return (Number(fen) / 100).toFixed(2);
+}
+
+// 元转分
+export function yuan2fen(yuan) {
+  if (yuan === null || yuan === undefined || yuan === '') {
+    return 0;
+  }
+  return Math.round(Number(yuan) * 100);
+}

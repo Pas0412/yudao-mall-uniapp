@@ -92,7 +92,7 @@ http.interceptors.request.use(
     // 增加 token 令牌、terminal 终端、tenant 租户的请求头
     const token = getAccessToken();
     if (token) {
-      config.header['Authorization'] = token;
+      config.header['Authorization'] = 'Bearer ' + token;
     }
     config.header['terminal'] = getTerminal();
 
