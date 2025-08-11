@@ -16,7 +16,7 @@
 								:src="sheep.$url.static('/static/img/shop/commission/agent.png')"
 								mode="aspectFill"
 							/>
-							<view class="tag-title">{{ getAgentLevelText(state.agentInfo.agentLevel) }}代理</view>
+							<view class="tag-title">{{ getAgentLevelText(state.agentInfo.areaType) }}代理</view>
 						</view>
 						<view class="area-info" v-if="state.agentInfo.provinceName">
 							{{ state.agentInfo.provinceName }}
@@ -37,38 +37,37 @@
 
 <script setup>
 	import sheep from '@/sheep';
-import { computed, reactive, onMounted } from 'vue';
-import RegionalAgentApi from '@/sheep/api/trade/regionalAgent';
+	import { computed, reactive, inject } from 'vue';
 
 	const userInfo = computed(() => sheep.$store('user').userInfo);
 	const headerBg = sheep.$url.css('/static/img/shop/commission/background.png');
 
+	// 从父组件注入代理信息
+	const agentInfo = inject('agentInfo');
+	const agentStatus = inject('agentStatus');
+
 	const state = reactive({
 		showMoney: false,
-		agentInfo: null,
+		agentInfo: computed(() => {
+			if (!agentInfo?.value || agentStatus?.value !== 'approved') {
+				return null;
+			}
+			return {
+				...agentInfo.value,
+				isAgent: true
+			};
+		}),
 	});
 
 	// 获取代理等级文本
-	const getAgentLevelText = (level) => {
+	const getAgentLevelText = (areaType) => {
 		const levelMap = {
-			1: '省级',
-			2: '市级',
-			3: '区县级'
+			2: '省级',
+			3: '市级',
+			4: '区县级'
 		};
-		return levelMap[level] || '未知';
+		return levelMap[areaType] || '未知';
 	};
-
-	onMounted(async () => {
-		// 获取代理信息
-		try {
-			const { code, data } = await RegionalAgentApi.getRegionalAgent();
-			if (code === 0) {
-				state.agentInfo = data;
-			}
-		} catch (error) {
-			console.error('获取代理信息失败:', error);
-		}
-	});
 
 </script>
 

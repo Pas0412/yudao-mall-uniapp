@@ -3,18 +3,10 @@ import request from '@/sheep/request';
 const RegionalAgentApi = {
   // ========== 地区代理功能 ==========
   
-  // 获取个人代理信息
-  getRegionalAgent: () => {
-    return request({
-      url: '/trade/regional-agent/get',
-      method: 'GET',
-    });
-  },
-  
   // 申请成为地区代理
   applyRegionalAgent: (data) => {
     return request({
-      url: '/trade/regional-agent/apply',
+      url: '/product/regional-agent/create',
       method: 'POST',
       data,
       custom: {
@@ -24,22 +16,49 @@ const RegionalAgentApi = {
     });
   },
   
+  // 获取地区代理信息
+  getRegionalAgent: (id) => {
+    return request({
+      url: '/product/regional-agent/get',
+      method: 'GET',
+      params: { id },
+    });
+  },
+  
+  // 分页查询地区代理
+  getRegionalAgentPage: (params) => {
+    return request({
+      url: '/product/regional-agent/page',
+      method: 'GET',
+      params,
+    });
+  },
+  
+  // 获取当前用户的地区代理
+  getCurrentUserRegionalAgent: () => {
+    return request({
+      url: '/product/regional-agent/get-by-user',
+      method: 'GET',
+    });
+  },
+  
   // ========== 佣金记录功能 ==========
   
-  // 获取个人佣金记录
-  getRegionalAgentRecordPage: (params) => {
-    const queryString = Object.keys(params)
-      .filter(key => params[key] !== undefined && params[key] !== null && params[key] !== '')
-      .map((key) => {
-        if (Array.isArray(params[key])) {
-          return params[key].map(val => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`).join('&');
-        }
-        return `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`;
-      })
-      .join('&');
+  // 获取佣金记录详情
+  getRegionalAgentRecord: (id) => {
     return request({
-      url: `/trade/regional-agent/record/page?${queryString}`,
+      url: '/product/regional-agent-record/get',
       method: 'GET',
+      params: { id },
+    });
+  },
+  
+  // 分页查询佣金记录
+  getRegionalAgentRecordPage: (params) => {
+    return request({
+      url: '/product/regional-agent-record/page',
+      method: 'GET',
+      params,
     });
   },
   
@@ -48,7 +67,7 @@ const RegionalAgentApi = {
   // 申请提现
   createRegionalAgentWithdraw: (data) => {
     return request({
-      url: '/trade/regional-agent/withdraw/create',
+      url: '/product/regional-agent-withdraw/create',
       method: 'POST',
       data,
       custom: {
@@ -58,20 +77,47 @@ const RegionalAgentApi = {
     });
   },
   
-  // 获取提现记录
-  getRegionalAgentWithdrawPage: (params) => {
-    const queryString = Object.keys(params)
-      .filter(key => params[key] !== undefined && params[key] !== null && params[key] !== '')
-      .map((key) => {
-        if (Array.isArray(params[key])) {
-          return params[key].map(val => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`).join('&');
-        }
-        return `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`;
-      })
-      .join('&');
+  // 获取提现记录详情
+  getRegionalAgentWithdraw: (id) => {
     return request({
-      url: `/trade/regional-agent/withdraw/page?${queryString}`,
+      url: '/product/regional-agent-withdraw/get',
       method: 'GET',
+      params: { id },
+    });
+  },
+  
+  // 分页查询提现记录
+  getRegionalAgentWithdrawPage: (params) => {
+    return request({
+      url: '/product/regional-agent-withdraw/page',
+      method: 'GET',
+      params,
+    });
+  },
+
+  // 获取我的代理信息（用于菜单权限判断）
+  getMyAgent: () => {
+    return request({
+      url: '/product/regional-agent/get-by-user',
+      method: 'GET',
+    });
+  },
+
+  // 获取我的申请记录
+  getMyApplications: (params) => {
+    return request({
+      url: '/product/regional-agent/my-applications',
+      method: 'GET',
+      params,
+    });
+  },
+
+  // 获取我的申请历史记录
+  getMyApplicationsHistory: (params) => {
+    return request({
+      url: '/product/regional-agent/my-applications-history',
+      method: 'GET',
+      params,
     });
   },
 };

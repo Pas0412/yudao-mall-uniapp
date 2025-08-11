@@ -45,42 +45,53 @@
       </view>
       
       <!-- 代理区域信息 -->
-      <view class="area-info-section" v-if="state.agentInfo?.isAgent">
+      <!-- <view class="area-info-section" v-if="state.agentInfo?.isAgent">
         <view class="area-title">代理区域</view>
         <view class="area-detail">
-          <text class="level-text">{{ getAgentLevelText(state.agentInfo?.agentLevel) }}</text>
+          <text class="level-text">{{ getAgentLevelText(state.agentInfo?.areaType) }}</text>
           <text class="area-text">
             {{ state.agentInfo?.provinceName }}
             <text v-if="state.agentInfo?.cityName">{{ state.agentInfo?.cityName }}</text>
             <text v-if="state.agentInfo?.areaName">{{ state.agentInfo?.areaName }}</text>
           </text>
         </view>
-      </view>
+      </view> -->
     </view>
   </view>
 </template>
 
 <script setup>
   import sheep from '@/sheep';
-import { computed, reactive, onMounted } from 'vue';
-import RegionalAgentApi from '@/sheep/api/trade/regionalAgent';
+import { computed, reactive, inject } from 'vue';
 import { fen2yuan } from '@/sheep/helper/utils';
 
   const userInfo = computed(() => sheep.$store('user').userInfo);
 
+  // 从父组件注入代理信息
+  const agentInfo = inject('agentInfo');
+  const agentStatus = inject('agentStatus');
+
   const state = reactive({
     showMoney: false,
-    agentInfo: null,
+    agentInfo: computed(() => {
+      if (!agentInfo?.value || agentStatus?.value !== 'approved') {
+        return null;
+      }
+      return {
+        ...agentInfo.value,
+        isAgent: true
+      };
+    }),
   });
 
   // 获取代理等级文本
-  const getAgentLevelText = (level) => {
+  const getAgentLevelText = (areaType) => {
     const levelMap = {
-      1: '省级',
-      2: '市级',
-      3: '区县级'
+      2: '省级',
+      3: '市级',
+      4: '区县级'
     };
-    return levelMap[level] || '暂无';
+    return levelMap[areaType] || '暂无';
   };
 
   // 获取状态文本
@@ -93,17 +104,7 @@ import { fen2yuan } from '@/sheep/helper/utils';
     return statusMap[status] || '暂无';
   };
 
-  onMounted(async () => {
-    // 获取代理信息
-    try {
-      const { code, data } = await RegionalAgentApi.getRegionalAgent();
-      if (code === 0) {
-        state.agentInfo = data;
-      }
-    } catch (error) {
-      console.error('获取代理信息失败:', error);
-    }
-  });
+
 </script>
 
 <style lang="scss" scoped>

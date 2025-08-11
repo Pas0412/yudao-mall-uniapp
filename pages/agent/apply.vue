@@ -225,11 +225,31 @@
     try {
       uni.showLoading({ title: '提交中...' });
       
+      // 根据代理级别确定areaId和areaType
+      let areaId, areaType, areaName;
+      const level = state.selectedAgentLevel.value;
+      
+      if (level === 1) {
+        // 省级代理
+        areaId = state.selectedArea.provinceId;
+        areaType = 2; // 省份
+        areaName = state.selectedArea.provinceName;
+      } else if (level === 2) {
+        // 市级代理
+        areaId = state.selectedArea.cityId;
+        areaType = 3; // 城市
+        areaName = state.selectedArea.cityName;
+      } else if (level === 3) {
+        // 区县级代理
+        areaId = state.selectedArea.areaId;
+        areaType = 4; // 地区
+        areaName = state.selectedArea.areaName;
+      }
+      
       const requestData = {
-        level: state.selectedAgentLevel.value,
-        provinceId: state.selectedArea.provinceId,
-        cityId: state.selectedArea.cityId || undefined,
-        areaId: state.selectedArea.areaId || undefined,
+        areaId,
+        areaType,
+        areaName,
       };
       
       const { code, data } = await RegionalAgentApi.applyRegionalAgent(requestData);

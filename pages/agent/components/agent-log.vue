@@ -94,7 +94,7 @@
     const levelMap = {
       2: '省级',
       3: '市级', 
-      4: '县区级'
+      4: '区县级'
     };
     
     const statusText = statusMap[item.status] || '未知状态';

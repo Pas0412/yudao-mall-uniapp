@@ -28,11 +28,22 @@
 
 <script setup>
   import sheep from '@/sheep';
-  import { reactive, onMounted } from 'vue';
-  import RegionalAgentApi from '@/sheep/api/trade/regionalAgent';
+  import { reactive, computed, inject } from 'vue';
+
+  // 从父组件注入代理信息
+  const agentInfo = inject('agentInfo');
+  const agentStatus = inject('agentStatus');
 
   const state = reactive({
-    agentInfo: null,
+    agentInfo: computed(() => {
+      if (!agentInfo?.value || agentStatus?.value !== 'approved') {
+        return null;
+      }
+      return {
+        ...agentInfo.value,
+        isAgent: true
+      };
+    }),
     menuList: [
       {
         img: '/static/img/shop/commission/commission_icon2.png',
@@ -84,17 +95,7 @@
     sheep.$router.go(item.path);
   };
 
-  onMounted(async () => {
-    // 获取代理信息
-    try {
-      const { code, data } = await RegionalAgentApi.getMyAgent();
-      if (code === 0) {
-        state.agentInfo = data;
-      }
-    } catch (error) {
-      console.error('获取代理信息失败:', error);
-    }
-  });
+
 </script>
 
 <style lang="scss" scoped>
