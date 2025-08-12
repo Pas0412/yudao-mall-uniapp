@@ -103,23 +103,7 @@ const RegionalAgentApi = {
     });
   },
 
-  // 获取我的申请记录
-  getMyApplications: (params) => {
-    return request({
-      url: '/product/regional-agent/my-applications',
-      method: 'GET',
-      params,
-    });
-  },
 
-  // 获取我的申请历史记录
-  getMyApplicationsHistory: (params) => {
-    return request({
-      url: '/product/regional-agent/my-applications-history',
-      method: 'GET',
-      params,
-    });
-  },
 };
 
 export default RegionalAgentApi;

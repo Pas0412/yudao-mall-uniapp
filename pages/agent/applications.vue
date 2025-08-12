@@ -154,7 +154,7 @@
     state.loadStatus = 'loading';
     
     try {
-      const { code, data } = await RegionalAgentApi.getMyApplications();
+      const { code, data } = await RegionalAgentApi.getCurrentUserRegionalAgent();
       
       if (code === 0 && data) {
         const list = Array.isArray(data) ? data : (data.list || []);

@@ -31,7 +31,7 @@
           </view>
           <view class="info-item">
             <text class="info-label">收款人</text>
-            <text class="info-value">{{ state.detail.accountName }}</text>
+            <text class="info-value">{{ state.detail.realName }}</text>
           </view>
           <view class="info-item">
             <text class="info-label">收款账号</text>
@@ -63,7 +63,7 @@
       </view>
 
       <!-- 收款码 -->
-      <view class="qr-card" v-if="state.detail.accountQrCodeUrl">
+      <view class="qr-card" v-if="state.detail.qrCodeUrl">
         <view class="card-header">
           <text class="header-title">收款码</text>
         </view>
@@ -71,7 +71,7 @@
           <view class="qr-wrap">
             <image 
               class="qr-image" 
-              :src="state.detail.accountQrCodeUrl" 
+              :src="state.detail.qrCodeUrl" 
               mode="aspectFit"
               @tap="previewImage"
             ></image>
@@ -211,7 +211,7 @@
 
   const previewImage = () => {
     uni.previewImage({
-      urls: [state.detail.accountQrCodeUrl],
+      urls: [state.detail.qrCodeUrl],
     });
   };
 
@@ -219,7 +219,7 @@
     try {
       state.loading = true;
       
-      const { code, data } = await RegionalAgentApi.getWithdrawRecord(id);
+      const { code, data } = await RegionalAgentApi.getRegionalAgentWithdraw(id);
       
       if (code === 0 && data) {
         state.detail = data;

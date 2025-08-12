@@ -231,7 +231,7 @@
         params.type = state.type;
       }
 
-      const { code, data } = await RegionalAgentApi.getWithdrawRecords(params);
+      const { code, data } = await RegionalAgentApi.getRegionalAgentWithdrawPage(params);
       
       if (code === 0 && data) {
         const newList = data.list || [];

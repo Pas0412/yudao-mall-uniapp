@@ -141,7 +141,7 @@
     try {
       state.loading = true;
       
-      const { code, data } = await RegionalAgentApi.getCommissionRecord(id);
+      const { code, data } = await RegionalAgentApi.getRegionalAgentRecord(id);
       
       if (code === 0 && data) {
         state.detail = data;

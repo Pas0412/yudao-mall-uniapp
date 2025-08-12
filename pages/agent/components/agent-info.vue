@@ -11,11 +11,11 @@
 					<view class="user-name">{{ userInfo.nickname }}</view>
 					<view class="user-info-box ss-flex ss-row-center" v-if="state.agentInfo?.isAgent">
 						<view class="tag-box ss-flex ss-row-center ss-m-r-8">
-							<image
+							<!-- <image
 								class="tag-img"
 								:src="sheep.$url.static('/static/img/shop/commission/agent.png')"
 								mode="aspectFill"
-							/>
+							/> -->
 							<view class="tag-title">{{ getAgentLevelText(state.agentInfo.areaType) }}代理</view>
 						</view>
 						<view class="area-info" v-if="state.agentInfo.provinceName">

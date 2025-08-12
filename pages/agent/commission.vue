@@ -232,7 +232,7 @@
         params.bizType = state.bizType;
       }
 
-      const { code, data } = await RegionalAgentApi.getCommissionRecords(params);
+      const { code, data } = await RegionalAgentApi.getRegionalAgentRecordPage(params);
       
       if (code === 0 && data) {
         const newList = data.list || [];
@@ -259,7 +259,7 @@
 
   const getAgentInfo = async () => {
     try {
-      const { code, data } = await RegionalAgentApi.getRegionalAgent();
+      const { code, data } = await RegionalAgentApi.getCurrentUserRegionalAgent();
       if (code === 0 && data) {
         state.agentInfo = data;
       }

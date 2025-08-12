@@ -22,13 +22,13 @@
         >
           <view class="log-item-wrap">
             <view class="log-item ss-flex ss-ellipsis-1 ss-col-center">
-              <view class="ss-flex ss-col-center">
-                <image
+              <!-- <view class="ss-flex ss-col-center"> -->
+                <!-- <image
                   class="log-img"
                   :src="sheep.$url.static('/static/img/shop/avatar/notice.png')"
                   mode="aspectFill"
                 />
-              </view>
+              </view> -->
               <view class="log-text ss-ellipsis-1">
                 {{ getLogText(item) }}
               </view>
@@ -109,23 +109,30 @@
     state.loadStatus = 'loading';
     
     try {
-      const { code, data } = await RegionalAgentApi.getMyApplicationsHistory();
+      const { code, data } = await RegionalAgentApi.getCurrentUserRegionalAgent();
       
       if (code === 0 && data) {
+        let applications = [];
+        
+        // 如果返回的是数组，直接使用
+        if (Array.isArray(data)) {
+          applications = data;
+        } else if (data && data.id) {
+          // 如果返回的是单个对象，转换为数组
+          applications = [data];
+        }
+        
         if (loadMore) {
-          state.pagination.list.push(...(data.list || []));
+          state.pagination.list.push(...applications);
         } else {
-          state.pagination.list = data.list || [];
+          state.pagination.list = applications;
         }
         
-        state.pagination.total = data.total || 0;
-        
-        if (state.pagination.list.length >= state.pagination.total) {
-          state.loadStatus = 'noMore';
-        } else {
-          state.loadStatus = 'more';
-        }
+        state.pagination.total = applications.length;
+        state.loadStatus = 'noMore'; // 由于是获取当前用户的申请记录，通常只有一条或几条
       } else {
+        state.pagination.list = [];
+        state.pagination.total = 0;
         state.loadStatus = 'noMore';
       }
     } catch (error) {
