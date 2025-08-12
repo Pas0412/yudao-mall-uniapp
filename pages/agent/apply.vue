@@ -299,25 +299,52 @@
     // 获取地区数据
     getAreaData();
     
-    // 检查用户是否已经是代理
+    // 检查用户申请状态
     try {
-      const { code, data } = await RegionalAgentApi.getRegionalAgent();
+      const { code, data } = await RegionalAgentApi.getCurrentUserRegionalAgent();
       if (code === 0 && data) {
-        state.agentInfo = data;
+        let latestApplication = null;
         
-        if (data.isAgent) {
-          uni.showModal({
-            title: '提示',
-            content: '您已经是代理商了，无需重复申请',
-            showCancel: false,
-            success: () => {
-              sheep.$router.back();
-            },
+        // 如果返回的是数组，选择最新的申请记录
+        if (Array.isArray(data) && data.length > 0) {
+          latestApplication = data.reduce((latest, current) => {
+            return current.auditTime > latest.auditTime ? current : latest;
           });
+        } else if (data && data.id) {
+          latestApplication = data;
+        }
+        
+        if (latestApplication) {
+          const status = parseInt(latestApplication.status);
+          
+          if (status === 1) {
+            // 已通过审核
+            uni.showModal({
+              title: '提示',
+              content: '您已经是代理商了，无需重复申请',
+              showCancel: false,
+              success: () => {
+                sheep.$router.back();
+              },
+            });
+            return;
+          } else if (status === 0) {
+            // 待审核状态
+            uni.showModal({
+              title: '提示',
+              content: '您的代理申请正在审核中，请耐心等待，无需重复申请',
+              showCancel: false,
+              success: () => {
+                sheep.$router.back();
+              },
+            });
+            return;
+          }
+          // status === 2 (已拒绝) 可以重新申请，不做处理
         }
       }
     } catch (error) {
-      console.error('获取代理信息失败:', error);
+      console.error('获取申请状态失败:', error);
     }
   });
 </script>
