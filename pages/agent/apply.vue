@@ -59,7 +59,7 @@
           @tap="submitApplication"
           :disabled="!canSubmit"
         >
-          提交申请
+          {{ getSubmitButtonText() }}
         </button>
       </view>
     </view>
@@ -117,6 +117,7 @@
     showAgentLevelPicker: false,
     showRegion: false,
     agentInfo: null,
+    existingAgent: null, // 现有申请记录
   });
 
   // 代理级别选项
@@ -130,6 +131,12 @@
   const canSubmit = computed(() => {
     const hasAgentLevel = state.selectedAgentLevel.value;
     const hasValidArea = checkAreaValid();
+    
+    // 如果已申请过，禁用提交按钮
+    if (state.existingAgent && state.existingAgent.hasApplied) {
+      return false;
+    }
+    
     return hasAgentLevel && hasValidArea;
   });
 
@@ -157,6 +164,27 @@
       return '请选择省份、城市和区县';
     }
     return '请先选择代理级别';
+  };
+
+  // 获取提交按钮文本
+  const getSubmitButtonText = () => {
+    if (state.existingAgent && state.existingAgent.hasApplied) {
+      return '已申请过';
+    }
+    return '立即申请';
+  };
+
+  // 检查现有申请状态
+  const checkExistingApplication = async () => {
+    try {
+      const { code, data } = await RegionalAgentApi.hasUserAppliedRegionalAgent();
+      if (code === 0) {
+        // data 是 boolean 值，true 表示已申请过
+        state.existingAgent = data ? { hasApplied: true } : null;
+      }
+    } catch (error) {
+      console.error('检查申请状态失败:', error);
+    }
   };
 
   // 显示代理级别选择器
@@ -223,6 +251,19 @@
     }
 
     try {
+      uni.showLoading({ title: '检查申请状态...' });
+      
+      // 检查是否已有申请记录
+      if (state.existingAgent && state.existingAgent.hasApplied) {
+        uni.hideLoading();
+        uni.showToast({
+          title: '您已申请过地区代理，请勿重复申请',
+          icon: 'none',
+          duration: 2000
+        });
+        return;
+      }
+      
       uni.showLoading({ title: '提交中...' });
       
       // 根据代理级别确定areaId和areaType
@@ -298,6 +339,8 @@
   onMounted(async () => {
     // 获取地区数据
     getAreaData();
+    // 检查现有申请状态
+    await checkExistingApplication();
     
     // 检查用户申请状态
     try {

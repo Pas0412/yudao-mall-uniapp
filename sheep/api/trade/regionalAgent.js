@@ -42,6 +42,14 @@ const RegionalAgentApi = {
     });
   },
   
+  // 检验用户是否已申请地区代理
+  hasUserAppliedRegionalAgent: () => {
+    return request({
+      url: '/product/regional-agent/has-applied',
+      method: 'GET',
+    });
+  },
+  
   // ========== 佣金记录功能 ==========
   
   // 获取佣金记录详情
