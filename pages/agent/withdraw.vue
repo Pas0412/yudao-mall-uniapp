@@ -13,7 +13,7 @@
     >
       <view class="">
         <view class="num-title">可提现金额（元）</view>
-        <view class="wallet-num">{{ fen2yuan(availableAmount) }}</view>
+        <view class="wallet-num">{{ availableAmount }}</view>
       </view>
       <button
         class="ss-reset-button log-btn"
@@ -92,7 +92,8 @@
 
   // 计算属性
   const availableAmount = computed(() => {
-    return state.agentInfo?.availablePrice || 0;
+	  console.log("1123",state.agentInfo)
+    return state.agentInfo?.brokeragePrice || 0;
   });
 
   // 提交提现
@@ -100,7 +101,7 @@
     // 参数校验
     if (
       !state.price ||
-      state.price > fen2yuan(availableAmount.value) ||
+      state.price > availableAmount.value ||
       state.price <= 0
     ) {
       sheep.$helper.toast('请输入正确的提现金额');
@@ -135,7 +136,7 @@
     const data = {
       price: state.price * 100, // 转换为分
       type: 5, // 微信零钱
-      realName: state.realName.trim(),
+      name: state.realName.trim(),
       accountNo: openid,
       transferChannelCode: getWeixinPayChannelCode(),
     };
@@ -177,7 +178,7 @@
     try {
       const { code, data } = await RegionalAgentApi.getCurrentUserRegionalAgent();
       if (code === 0 && data) {
-        state.agentInfo = data;
+        state.agentInfo = data[0];
       }
     } catch (error) {
       console.error('获取代理信息失败:', error);

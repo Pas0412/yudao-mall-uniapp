@@ -27,13 +27,13 @@
         <view class="ss-flex-1 ss-flex-col ss-col-center">
           <view class="item-title">可用佣金(元)</view>
           <view class="item-detail">
-            {{ state.showMoney ? fen2yuan(state.agentInfo?.availablePrice || 0) : '***' }}
+            {{ state.showMoney ? state.agentInfo?.brokeragePrice || 0 : '***' }}
           </view>
         </view>
         <view class="ss-flex-1 ss-flex-col ss-col-center">
           <view class="item-title">冻结佣金(元)</view>
           <view class="item-detail">
-            {{ state.showMoney ? fen2yuan(state.agentInfo?.frozenPrice || 0) : '***' }}
+            {{ state.showMoney ? state.agentInfo?.frozenBrokeragePrice || 0 : '***' }}
           </view>
         </view>
         <view class="ss-flex-1 ss-flex-col ss-col-center">
@@ -74,6 +74,7 @@ import { fen2yuan } from '@/sheep/helper/utils';
   const state = reactive({
     showMoney: false,
     agentInfo: computed(() => {
+		console.log(agentInfo)
       if (!agentInfo?.value || agentStatus?.value !== 'approved') {
         return null;
       }
